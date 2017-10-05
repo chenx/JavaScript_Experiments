@@ -1,0 +1,116 @@
+<html>
+        <head>
+            <meta charset="UTF-8">
+            <title>This is a test</title>
+            <style>
+            input[type="button"] {width: 50px; height: 50px;}
+            input[type="text"] {width:215px; height: 50px;}
+            .btn {width: 30px;}
+            body {padding: 10px;}
+            </style>
+            <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+            <script type="text/javascript">
+    
+            var v1 = null;
+            var v2 = null;
+            var op = null;
+            function calc(val) {
+                // alert(val);
+                console.log('calc: ' + val);
+                if (isNaN(val)) {
+                    if ('+-*/'.indexOf(val) !== -1) {
+                        op = val;
+                    }
+                    else if (val === 'C') {
+                        disp('');
+                        clear();
+                    }
+                    else if (val === '=') {
+                        if (op === null) {
+                            disp('');
+                            return;
+                        }
+                        var result = calculate(v1, v2, op);
+                        disp(result);
+                        clear();
+                    }
+                } else {
+                    if (op === null) {
+                        if (v1 === null) v1 = parseInt(val);
+                        else v1 = v1 * 10 + parseInt(val);
+                        disp(v1);
+                    } else {
+                        if (v2 === null) v2 = parseInt(val);
+                        else v2 = v2 * 10 + parseInt(val);
+                        disp(v2);
+                    }
+                }
+            }
+            
+            function clear() {
+                v1 = v2 = op = null;
+            }
+    
+            function disp(msg) {
+                var d = document.getElementById('display');
+                if (d === null) {
+                    show_msg('no element for display');
+                    return;
+                }
+                d.value = msg;
+                show_msg(msg);
+            }
+    
+            function calculate(v1, v2, op) {
+                if (op == '+') return v1 + v2;
+                if (op == '-') return v1 - v2;
+                if (op == '*') return v1 * v2;
+                if (op == '/') return v1 / v2;
+                show_msg('unknown operator: ' + op);
+            }
+    
+            function show_msg(msg) {
+                console.log(msg);
+            }
+            </script>
+        </head>
+        <body>
+    
+            <h1>Calculator</h1>
+    
+            <div style="background-color:#999; padding: 10px; display:inline-block;">
+                <input type="text" value="" id="display"/>
+                <br/>
+                <div style="line-height:10px;">&nbsp;</div>
+    
+                <input type="button" value="C" class="btn" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="+/-" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="A/C" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="/" onclick="javascript:calc(this.value);"/>
+                <br/>
+    
+                <input type="button" value="7" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="8" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="9" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="*" onclick="javascript:calc(this.value);"/>
+                <br/>
+                
+                <input type="button" value="4" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="5" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="6" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="-" onclick="javascript:calc(this.value);"/>
+                <br/>
+                
+                <input type="button" value="1" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="2" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="3" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="+" onclick="javascript:calc(this.value);"/>
+                <br/>
+    
+                <input type="button" value="0" style="width: 105px;" onclick="javascript:calc(this.value);"/>
+                <input type="button" value="." onclick="javascript:calc(this.value);"/>
+                <input type="button" value="=" onclick="javascript:calc(this.value);"/>
+            </div>
+    
+        </body>
+    </html>
