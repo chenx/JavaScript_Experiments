@@ -1,0 +1,145 @@
+<html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Hungry Snake</title>
+            <style>
+            input[type="button"] {width:100px; height:25px;}
+            </style>
+            <script type="text/javascript">
+            var snake;  // an array.
+            var snake_direction;
+            var snake_color = '#00FF00';
+            var board_color = '#999';
+            var board = document.getElementById("board");
+            var width = 30;
+            var height = 20;
+            var max_grid = width * height;
+            var grid_size = 20;  // = canvas.width / width = canvas.height / height
+            var game_state = 'stopped';
+
+            function init() {
+                snake = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // array in the range of 0-239.
+                //snake = [10, 11, 12, 13, 14];
+                snake_direction = 1; // 1/2/3/4: right/left/up/down
+
+                //snake = [4, 3, 2, 1, 0]; // array in the range of 0-239.
+                //snake = [14, 13, 12, 11, 10]
+                //snake_direction = 2; // 1/2/3/4: right/left/up/down
+
+                //snake = [0, 1, 2, 3, 4];
+                //snake = [40, 30, 20, 10, 0];
+                //snake_direction = 3; 
+
+                //snake = [0, 1, 2, 3, 4];
+                //snake = [95, 96, 97, 98, 99];
+                //snake_direction = 4; 
+
+                // Draw snake.
+                for (var i = 0; i < snake.length; ++ i) {
+                    drawSquare(snake[i], snake_color);
+                }
+            }
+            function drawSquare(pos, color) {
+                var board = document.getElementById("board");
+                var ctx = board.getContext("2d");
+                ctx.fillStyle = color;
+                var y = Math.floor(pos / width) * grid_size;
+                var x = (pos % width) * grid_size;
+                ctx.fillRect(x, y, grid_size, grid_size); 
+                log('drawSquare: pos=' + pos + ', x/y=' + x + '/' + y + '. color=' + color);
+            }
+            function draw() {
+                updateSnake();
+            }
+            function updateSnake() {
+                var head = snake[snake.length-1];
+                var next;
+                switch (snake_direction) {
+                    case 1:  // Left
+                        if (head % width == width-1) head -= width;
+                        next = head + 1;
+                        break;
+                    case 2:  // Right
+                        if (head % width == 0) head += width;
+                        next = head - 1;
+                        break;
+                    case 3:  // Up
+                        next = head - width;
+                        if (next < 0) next += max_grid;
+                        break;
+                    case 4:  // Down
+                        next = head + width;
+                        if (next >= max_grid) next -= max_grid;
+                    break;
+                }
+                
+                drawSquare(next, snake_color);
+                snake.push(next);
+                drawSquare(snake[0], board_color);
+                snake.shift();
+            }
+            function log(msg) {
+                // console.log(msg);
+            }
+            function game_step() {
+                if (game_state === 'stopped') return;
+                draw();
+                setTimeout(function(){ game_step(); }, 200);
+            }
+            function change_state() {
+                var btnState = document.getElementById('btnState');
+                // log(state);
+                if (game_state === 'stopped') {
+                    game_state = 'started';
+                    btnState.value = 'Stop';
+                    game_step();
+                } else {
+                    game_state = 'stopped';
+                    btnState.value = 'Start';
+                }
+            }
+
+            // Change snake's direction.
+            document.addEventListener("keydown", keyDownTextField, false);
+
+            // snake cannot go back to neck, only left/right/forward.
+            function keyDownTextField(e) {
+                if (game_state === 'stopped') return;
+                
+                var keyCode = e.keyCode;
+                log('keyCode: ' + keyCode); 
+                switch (keyCode) {
+                    case 39:  // Left
+                        if (snake_direction == 2) return;
+                        snake_direction = 1;
+                        break;
+                    case 37:  // Right
+                        if (snake_direction == 1) return;
+                        snake_direction = 2;
+                        break;
+                    case 38:  // Up
+                        if (snake_direction == 4) return;
+                        snake_direction = 3;
+                        break;
+                    case 40:  // Down
+                        if (snake_direction == 3) return;
+                        snake_direction = 4;
+                        break;
+                }
+            }
+            </script>
+        </head>
+        <body>
+    
+            <h1>Hungry Snake</h1>
+    
+            <div>
+                <canvas id='board' width="600" height="400" style='background-color:#999;'></canvas>
+            </div>
+            <input id='btnState' type='button' value='Start' onclick="javascript: change_state();"/>
+
+            <script type="text/javascript">
+            init();
+            </script>
+        </body>
+    </html>
