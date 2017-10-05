@@ -1,0 +1,149 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>This is a test</title>
+        <style>
+        input[type="button"] {width: 50px; height: 50px;}
+        input[type="text"] {width:215px; height: 50px;}
+        .btn {width: 30px;}
+        body {padding: 10px;}
+        </style>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+        <script type="text/javascript">
+
+        var cur_val = null;
+        var expr = null;
+        var dot = 1;
+        function calc(val) {
+            // alert(val);
+            // log_msg('entered: ' + val);
+            if (cur_val === null) {
+                if (val === 'AC') {
+                    clear();
+                } else if (isNaN(val)) {
+                    log_msg('Invalid input: ' + val + '. Expecting number.');
+                } else {
+                    cur_val = parseInt(val);
+                    expr = '';
+                    disp(expr + cur_val);
+                    // disp(cur_val);
+                }
+            } else if (isNaN(cur_val)) {  // cur_val is an operator.
+                if (val === 'AC') {
+                    clear();
+                } else if (isNaN(val)) {
+                    log_msg('Invalid input: ' + val + '. Expecting number.');
+                } else {  // new number entered
+                    expr += cur_val;
+                    cur_val = parseInt(val);
+                    disp(expr + cur_val);
+                }
+            } else { // cur_val is a number
+                if (val === 'AC') {
+                    clear();
+                } else if (val === '=') {
+                    calculate(expr + cur_val);
+                } else if (val === '+/-') {
+                    cur_val = - cur_val;
+                    disp(expr + cur_val);
+                } else if (val === '.') {
+                    if (dot > 1) {
+                        log_msg('Invalid input: already has a dot.');
+                    } else {
+                        dot = 10;
+                        disp(expr + cur_val + '.');
+                    }
+                } else if (isNaN(val)) {  // val is an operator.
+                    expr += cur_val;
+                    cur_val = val;
+                    dot = 1;
+                    disp(expr + cur_val);
+                } else {
+                    if (dot === 1) {
+                        cur_val = cur_val * 10 + parseInt(val);
+                        disp(expr + cur_val);
+                    } else {
+                        cur_val += parseFloat(val) / dot;
+                        disp(expr + cur_val + append_zeros(cur_val, dot));
+                        dot *= 10;
+                    }
+                }
+            }
+        }
+
+        function append_zeros(cur_val, dot) {
+            var v = cur_val * dot + '';
+            var zeros = '';
+            if (Number.isInteger(cur_val)) zeros = '.';
+            for (var i = v.length - 1; i > 0; -- i) {
+                if (v.charAt(i) !== '0') break;
+                else zeros += '0';
+            }
+            return zeros;
+        }
+        
+        function clear() {
+            expr = cur_val = null;
+            dot = 1;
+            disp('');
+            document.getElementById('msg').innerHTML = '';
+        }
+
+        function disp(msg) {
+            document.getElementById('display').value = msg;
+            // log_msg('disp: ' + msg);
+        }
+
+        function calculate(expr) {
+            log_msg('calculate: ' + expr);
+        }
+
+        function log_msg(msg) {
+            document.getElementById('msg').innerHTML = msg;
+            console.log(msg);
+        }
+
+        </script>
+    </head>
+    <body>
+
+        <h1>Calculator</h1>
+
+        <div style="background-color:#999; padding: 10px; display:inline-block;">
+            <input type="text" value="" id="display"/>
+            <br/>
+            <div style="line-height:10px;">&nbsp;</div>
+
+            <input type="button" value="AC" class="btn" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="+/-" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="%" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="/" onclick="javascript:calc(this.value);"/>
+            <br/>
+
+            <input type="button" value="7" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="8" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="9" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="*" onclick="javascript:calc(this.value);"/>
+            <br/>
+            
+            <input type="button" value="4" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="5" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="6" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="-" onclick="javascript:calc(this.value);"/>
+            <br/>
+            
+            <input type="button" value="1" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="2" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="3" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="+" onclick="javascript:calc(this.value);"/>
+            <br/>
+
+            <input type="button" value="0" style="width: 105px;" onclick="javascript:calc(this.value);"/>
+            <input type="button" value="." onclick="javascript:calc(this.value);"/>
+            <input type="button" value="=" onclick="javascript:calc(this.value);"/>
+            <br/>
+        </div>
+        <div id='msg'></div>
+        
+    </body>
+</html>
